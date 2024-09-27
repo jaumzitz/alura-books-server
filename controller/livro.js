@@ -19,8 +19,15 @@ function getLivro(req, res) {
         
         const id = req.params.id
 
-        const livro = getLivroPorId(id)
-        res.send(livro)
+        if (id && Number(id)) {
+            const livro = getLivroPorId(id)
+            res.send(livro)
+        } else {
+            
+        res.status(422) .send('Id não processável'); return
+        }    
+
+        
 
     } catch (error) {
         res.status(500)
@@ -32,14 +39,24 @@ function postLivro(req, res) {
     try {
         const livroNovo = req.body
 
-        insereLivro(livroNovo)
-        
-        res.status(201)
-        res.send("Livro inserido com sucesso")
+
+        if (req.body.nome) {
+            insereLivro(livroNovo)
+            
+            res
+                .status(201)
+                .send("Livro inserido com sucesso")
+
+        } else {
+            res
+                .status(422)
+                .send("O nome é obrigatório")
+        }
 
     } catch (error) {
-        res.status(500)
-        res.send(error.message)
+        res
+            .status(500)
+            .send(error.message)
     }
 }
 
@@ -48,12 +65,22 @@ function patchLivro(req, res) {
         const id = req.params.id
         const body = req.body
 
-        modificaLivro(body, id)
+        if (id && Number(id)) {
+            modificaLivro(body, id)
         res.send(body);
+        } else {
+            
+        res
+            .status(422) 
+            .send('Id não processável');
+        }  
+
+        
 
     } catch (error) {
-        res.status(500)
-        res.send(error.message)
+        res
+            .status(500)
+            .send(error.message)
     }
 }
 
@@ -61,12 +88,20 @@ function deleteLivro(req, res) {
     try {
         const id = req.params.id
 
-        deletaLivro(id)
-        res.send("Livro deletado com sucesso")
+        if (id && Number(id)) {
+            deletaLivro(id)
+            res.send("Livro deletado com sucesso")
+        } else {
+                
+            res
+                .status(422) 
+                .send('Id não processável');
+        }  
 
     } catch (error) {
-        res.status(500)
-        res.send(error.message)
+        res
+            .status(500)
+            .send(error.message)
     }
 }
 
